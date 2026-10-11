@@ -14,7 +14,7 @@ import {
   proofPhotos,
   users,
 } from "@/db/schema";
-import { pickEncouragement } from "@/lib/encouragements";
+import { generateTaskReflection } from "@/lib/ai/reflection";
 import type { Locale } from "@/lib/i18n/messages";
 import { requireUser, getUserLocale } from "@/lib/session";
 import { STARTER_TEMPLATES } from "@/lib/templates";
@@ -161,6 +161,7 @@ export async function addLeverAction(formData: FormData) {
 
 export type DoneResult = {
   encouragement: string;
+  reflectionSource: "ai" | "static";
   leverId: string;
 };
 
@@ -175,16 +176,28 @@ export async function markLeverDoneAction(formData: FormData): Promise<DoneResul
   const [lever] = await db
     .select({
       id: frictionLevers.id,
+      action: frictionLevers.action,
       habitId: frictionLevers.habitId,
+      habitTitle: habits.title,
+      environmentName: environments.name,
       userId: habits.userId,
     })
     .from(frictionLevers)
     .innerJoin(habits, eq(habits.id, frictionLevers.habitId))
+    .innerJoin(environments, eq(environments.id, frictionLevers.environmentId))
     .where(and(eq(frictionLevers.id, leverId), eq(habits.userId, userId)))
     .limit(1);
 
   if (!lever) {
-    return { encouragement: pickEncouragement(locale), leverId };
+    const reflection = await generateTaskReflection({
+      locale,
+      action: "setup task",
+    });
+    return {
+      encouragement: reflection.text,
+      reflectionSource: reflection.source,
+      leverId,
+    };
   }
 
   await db
@@ -205,9 +218,20 @@ export async function markLeverDoneAction(formData: FormData): Promise<DoneResul
     });
   }
 
+  const reflection = await generateTaskReflection({
+    locale,
+    action: lever.action,
+    habitTitle: lever.habitTitle,
+    environmentName: lever.environmentName,
+  });
+
   revalidatePath("/today");
   revalidatePath(`/habits/${lever.habitId}`);
-  return { encouragement: pickEncouragement(locale), leverId };
+  return {
+    encouragement: reflection.text,
+    reflectionSource: reflection.source,
+    leverId,
+  };
 }
 
 export async function checkInAction(formData: FormData) {
