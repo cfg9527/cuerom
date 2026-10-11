@@ -16,6 +16,9 @@ export function DoneFlow({ leverId, locale, actionLabel }: Props) {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [encouragement, setEncouragement] = useState<string | null>(null);
+  const [reflectionSource, setReflectionSource] = useState<"ai" | "static" | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -29,7 +32,6 @@ export function DoneFlow({ leverId, locale, actionLabel }: Props) {
       if (!res.ok) {
         const data = (await res.json().catch(() => ({}))) as { error?: string };
         setError(data.error ?? "Upload failed — you can still mark done without a photo.");
-        // allow continuing without photo
       } else {
         const data = (await res.json()) as { url: string };
         blobUrl = data.url;
@@ -42,6 +44,7 @@ export function DoneFlow({ leverId, locale, actionLabel }: Props) {
       if (blobUrl) fd.set("blobUrl", blobUrl);
       const result = await markLeverDoneAction(fd);
       setEncouragement(result.encouragement);
+      setReflectionSource(result.reflectionSource);
       setOpen(false);
     });
   }
@@ -49,9 +52,18 @@ export function DoneFlow({ leverId, locale, actionLabel }: Props) {
   if (encouragement) {
     return (
       <div className="encourage" role="status">
-        <p className="encourage-kicker">{m.encouragementTitle}</p>
+        <p className="encourage-kicker">
+          {reflectionSource === "ai" ? m.reflectionTitle : m.encouragementTitle}
+        </p>
         <p className="encourage-body">{encouragement}</p>
-        <button type="button" className="btn btn-ghost" onClick={() => setEncouragement(null)}>
+        <button
+          type="button"
+          className="btn btn-ghost"
+          onClick={() => {
+            setEncouragement(null);
+            setReflectionSource(null);
+          }}
+        >
           {m.continue}
         </button>
       </div>
