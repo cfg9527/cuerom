@@ -14,6 +14,7 @@
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
     "@vercel/blob": "^2.8.1",
+    "ai": "^7.0.137",
     "bcryptjs": "^3.0.3",
     "date-fns": "^4.4.0",
     "drizzle-orm": "^0.45.4",
