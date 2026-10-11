@@ -34,6 +34,8 @@ export async function updateLocaleAction(formData: FormData) {
     .update(users)
     .set({ locale, updatedAt: new Date() })
     .where(eq(users.id, userId));
+  const { setLocaleCookie } = await import("@/lib/actions/locale-actions");
+  await setLocaleCookie(locale);
   revalidatePath("/", "layout");
 }
 
