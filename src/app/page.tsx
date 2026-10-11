@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 import { auth } from "@/lib/auth";
+import { getPublicLocale } from "@/lib/i18n/locale";
 import { messages } from "@/lib/i18n/messages";
 
 export default async function HomePage() {
@@ -9,14 +11,14 @@ export default async function HomePage() {
     redirect("/today");
   }
 
-  const locale =
-    typeof session?.user?.locale === "string" && session.user.locale === "zh"
-      ? "zh"
-      : "en";
+  const locale = await getPublicLocale();
   const m = messages[locale];
 
   return (
-    <main className="landing">
+    <main className="landing" lang={locale}>
+      <div className="landing-topbar">
+        <LocaleSwitcher locale={locale} tone="on-dark" />
+      </div>
       <section className="landing-hero">
         <h1 className="landing-brand">{m.brand}</h1>
         <p className="landing-tag">{m.tagline}</p>
