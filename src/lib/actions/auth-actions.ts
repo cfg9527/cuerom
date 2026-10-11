@@ -6,7 +6,9 @@ import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db";
 import { users } from "@/db/schema";
+import { setLocaleCookie } from "@/lib/actions/locale-actions";
 import { signIn, signOut } from "@/lib/auth";
+import { getPublicLocale } from "@/lib/i18n/locale";
 
 export async function registerAction(formData: FormData) {
   const email = String(formData.get("email") ?? "")
@@ -38,6 +40,7 @@ export async function registerAction(formData: FormData) {
     locale,
     authProviderId: `credentials:${email}`,
   });
+  await setLocaleCookie(locale);
 
   try {
     await signIn("credentials", {
@@ -58,11 +61,13 @@ export async function loginAction(formData: FormData) {
     .trim()
     .toLowerCase();
   const password = String(formData.get("password") ?? "");
+  const publicLocale = await getPublicLocale();
+
   try {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/today",
+      redirect: false,
     });
   } catch (e) {
     if (e instanceof AuthError) {
@@ -70,6 +75,15 @@ export async function loginAction(formData: FormData) {
     }
     throw e;
   }
+
+  // Pre-login picker wins so Dashboard matches the language they chose.
+  const db = getDb();
+  await db
+    .update(users)
+    .set({ locale: publicLocale, updatedAt: new Date() })
+    .where(eq(users.email, email));
+  await setLocaleCookie(publicLocale);
+  redirect("/today");
 }
 
 export async function logoutAction() {
