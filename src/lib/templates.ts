@@ -114,9 +114,6 @@ export const STARTER_TEMPLATES: StarterTemplate[] = [
       action: "Put the alarm across the room; no charger on the nightstand",
     },
     zh: {
-      habit: "早� the alarm across the room; no charger on the nightstand",
-    },
-    zh: {
       habit: "早啲瞓",
       environment: "睡房",
       cue: "鬧鐘放在房間另一邊",
