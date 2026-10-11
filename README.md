@@ -93,3 +93,13 @@ After marking a setup task done, CueRoom generates a short bilingual reflection 
 - Project id: `cold-hat-78980333` (console: [console.neon.tech](https://console.neon.tech))
 
 Do not commit `.env.local` or any secrets.
+
+## Preview / demo backdoor
+
+Tokenized demo (no login, sample fixtures only — never real DB rows):
+
+```
+https://cuerom.vercel.app/preview?key=<PREVIEW_BYPASS_TOKEN>
+```
+
+Set `PREVIEW_BYPASS_TOKEN` in Vercel env / `.env.local` (see `.env.example`). `/today` stays auth-gated without the token. Banner: **Preview / 預覽模式**. EN|中文 switcher works on the preview page.
