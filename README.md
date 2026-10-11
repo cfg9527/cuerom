@@ -94,12 +94,31 @@ After marking a setup task done, CueRoom generates a short bilingual reflection 
 
 Do not commit `.env.local` or any secrets.
 
-## Preview / demo backdoor
+## Two independent surfaces
 
-Tokenized demo (no login, sample fixtures only — never real DB rows):
+CueRoom ships as **two mutually independent editions**. They do not share session requirements or real user data.
 
-```
-https://cuerom.vercel.app/preview?key=<PREVIEW_BYPASS_TOKEN>
-```
+### 1. Public product（公用版）
 
-Set `PREVIEW_BYPASS_TOKEN` in Vercel env / `.env.local` (see `.env.example`). `/today` stays auth-gated without the token. Banner: **Preview / 預覽模式**. EN|中文 switcher works on the preview page.
+| | |
+|--|--|
+| URL | https://cuerom.vercel.app |
+| Audience | Registered users |
+| Auth | Login required for Dashboard (`/today`), habits, environments, settings |
+| Data | Real Neon Postgres rows |
+| Locale | EN \| 中文 on homepage **before** login (cookie `cuerom_locale`), then account locale after sign-in |
+
+Homepage CTAs: Get started / Sign in only. No secret-link on the public marketing page.
+
+### 2. Secret edition（隱藏版）
+
+| | |
+|--|--|
+| URL | `https://cuerom.vercel.app/preview?key=<PREVIEW_BYPASS_TOKEN>` |
+| Audience | Bookmarkable demo — **no login ever** |
+| Auth | Token query only (`PREVIEW_BYPASS_TOKEN`). Not in auth middleware. Never redirects to `/login` |
+| Data | In-memory fixtures from the 10 starters — **never** real DB rows |
+| Banner | **隱藏版 / Secret preview** |
+| Locale | EN \| 中文 on the secret surface itself |
+
+Set `PREVIEW_BYPASS_TOKEN` in Vercel env / `.env.local` (see `.env.example`). Generate with `openssl rand -hex 24`.
