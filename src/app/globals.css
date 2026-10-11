@@ -91,7 +91,7 @@ a {
   opacity: 0.85;
   margin: 0 0 1.6rem;
   line-height: 1.5;
-  animation: rise 0.9s 0.4s ease both;
+  animation: rise 0.9s 0.3s ease both;
 }
 
 .landing-ctas {
