@@ -93,6 +93,10 @@ export const messages = {
     back: "Back",
     primaryCta: "Open tasks",
     secondaryNav: "More",
+    previewBanner: "Preview / 預覽模式 — sample data only · 示範資料",
+    previewBannerShort: "Preview / 預覽模式",
+    previewDenied: "Preview link is invalid or not configured.",
+    previewHome: "Back to home",
   },
   zh: {
     brand: "CueRoom",
@@ -186,6 +190,10 @@ export const messages = {
     back: "返回",
     primaryCta: "打開任務",
     secondaryNav: "更多",
+    previewBanner: "Preview / 預覽模式 — 示範資料 · sample data only",
+    previewBannerShort: "Preview / 預覽模式",
+    previewDenied: "預覽連結無效或尚未設定。",
+    previewHome: "返回首頁",
   },
 } as const;
 
