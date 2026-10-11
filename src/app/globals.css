@@ -47,6 +47,28 @@ a {
   padding: 1rem 1.1rem 5rem;
 }
 
+.app-frame {
+  min-height: 100dvh;
+}
+
+.app-nav-wrap {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 0 1.1rem;
+  position: relative;
+  z-index: 20;
+}
+
+.page-content:not(:has(.dashboard-root)) {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 0 1.1rem 5rem;
+}
+
+.page-content:has(.dashboard-root) {
+  padding: 0 0 5rem;
+}
+
 .landing {
   min-height: 100dvh;
   display: grid;
@@ -126,9 +148,9 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.85rem 0 1.25rem;
+  padding: 0.85rem 0 1rem;
   border-bottom: 1px solid var(--line);
-  margin-bottom: 1.25rem;
+  margin-bottom: 0;
   position: sticky;
   top: 0;
   backdrop-filter: blur(10px);
@@ -136,10 +158,25 @@ a {
   z-index: 10;
 }
 
+.app-frame:has(.dashboard-root) .app-nav {
+  border-bottom-color: transparent;
+  background: rgba(243, 239, 230, 0.55);
+}
+
 .nav-brand {
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.45rem;
   letter-spacing: -0.02em;
+}
+
+.nav-brand-compact {
+  font-size: 1.15rem;
+  opacity: 0.85;
+}
+
+.app-frame:has(.dashboard-root) .nav-brand-compact {
+  font-size: 1rem;
+  opacity: 0.55;
 }
 
 .nav-links {
@@ -437,6 +474,241 @@ textarea {
   color: var(--ink-soft);
 }
 
+/* —— Dashboard (Today) —— */
+.dashboard-root {
+  width: 100%;
+}
+
+.dash-hero {
+  position: relative;
+  min-height: min(92dvh, 760px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  color: #f4f0e6;
+  padding: clamp(1.5rem, 5vw, 3rem) clamp(1.1rem, 4vw, 2.5rem) clamp(2rem, 6vw, 3.5rem);
+  animation: wash-in 1.05s ease both;
+}
+
+.dash-hero-visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(22, 36, 30, 0.25) 0%, rgba(22, 36, 30, 0.55) 42%, rgba(18, 24, 21, 0.92) 100%),
+    radial-gradient(ellipse 80% 55% at 70% 18%, rgba(232, 196, 140, 0.35), transparent 58%),
+    linear-gradient(125deg, #24382f 0%, #1a2c25 38%, #2a221c 100%);
+}
+
+.dash-room-window {
+  position: absolute;
+  top: 12%;
+  right: 8%;
+  width: min(42vw, 280px);
+  aspect-ratio: 4 / 5;
+  border: 1px solid rgba(244, 240, 230, 0.18);
+  background:
+    linear-gradient(160deg, rgba(255, 236, 200, 0.55) 0%, rgba(180, 210, 190, 0.15) 45%, transparent 70%),
+    rgba(244, 240, 230, 0.06);
+  box-shadow: inset 0 0 40px rgba(255, 220, 160, 0.12);
+  animation: window-breathe 4.5s ease-in-out infinite alternate;
+  transform-origin: center top;
+}
+
+.dash-room-floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background:
+    linear-gradient(180deg, transparent, rgba(40, 32, 26, 0.55)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(244, 240, 230, 0.03) 0 18px,
+      transparent 18px 36px
+    );
+  clip-path: polygon(0 28%, 100% 0, 100% 100%, 0 100%);
+}
+
+.dash-room-glow {
+  position: absolute;
+  left: 12%;
+  bottom: 22%;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184, 92, 56, 0.28), transparent 68%);
+  filter: blur(2px);
+  animation: glow-drift 5.5s ease-in-out infinite alternate;
+}
+
+.dash-hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 34rem;
+  width: min(720px, 100%);
+  margin: 0 auto 0 0;
+  align-self: flex-start;
+}
+
+@media (min-width: 720px) {
+  .dash-hero-copy {
+    margin-left: max(0px, calc((100% - 720px) / 2));
+  }
+}
+
+.dash-brand {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.8rem, 11vw, 4.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  margin: 0 0 0.85rem;
+  animation: rise 0.85s 0.08s ease both;
+}
+
+.dash-headline {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.55rem, 4.6vw, 2.15rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+  margin: 0 0 0.7rem;
+  animation: rise 0.85s 0.18s ease both;
+}
+
+.dash-support {
+  margin: 0 0 1.5rem;
+  max-width: 34ch;
+  line-height: 1.5;
+  opacity: 0.88;
+  font-size: 1.02rem;
+  animation: rise 0.85s 0.28s ease both;
+}
+
+.dash-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  animation: rise 0.85s 0.38s ease both;
+}
+
+.dash-cta-primary {
+  background: #e8dcc4;
+  color: #1a211c;
+}
+
+.dash-cta-primary:hover:not(:disabled) {
+  background: #f4efe4;
+}
+
+.dash-cta-ghost {
+  border-color: rgba(244, 240, 230, 0.4);
+  color: #f4f0e6;
+}
+
+.dash-body {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 1.75rem 1.1rem 0;
+}
+
+.dash-glance {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+  animation: rise 0.55s 0.1s ease both;
+}
+
+.glance-stat {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.65rem 0.15rem;
+  border-bottom: 2px solid rgba(47, 93, 74, 0.25);
+}
+
+.glance-value {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.75rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--moss-deep);
+}
+
+.glance-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.dash-momentum {
+  margin-bottom: 1.5rem;
+  animation: rise 0.55s 0.16s ease both;
+}
+
+.momentum-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.55rem;
+}
+
+.momentum-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.momentum-pct {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.4rem;
+  color: var(--copper);
+}
+
+.momentum-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(26, 33, 28, 0.08);
+  overflow: hidden;
+}
+
+.momentum-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--moss), var(--copper-soft));
+  transition: width 0.7s ease;
+}
+
+.dash-envs {
+  margin-bottom: 0.5rem;
+}
+
+@keyframes window-breathe {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
+@keyframes glow-drift {
+  from {
+    transform: translate(0, 0);
+    opacity: 0.7;
+  }
+  to {
+    transform: translate(12px, -8px);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 640px) {
   .nav-links {
     gap: 0.55rem;
@@ -446,5 +718,19 @@ textarea {
   .app-nav {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .dash-glance {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dash-hero {
+    min-height: min(88dvh, 680px);
+  }
+
+  .dash-room-window {
+    width: min(48vw, 160px);
+    top: 14%;
+    right: 6%;
   }
 }
