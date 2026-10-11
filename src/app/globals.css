@@ -77,6 +77,79 @@ a {
   overflow: hidden;
 }
 
+.landing-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.85rem clamp(1rem, 4vw, 2rem);
+  animation: rise 0.7s ease both;
+}
+
+.auth-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.locale-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.locale-switcher-on-dark {
+  border-color: rgba(247, 243, 234, 0.35);
+  background: rgba(18, 24, 21, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.locale-switcher-on-light {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.locale-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.locale-switcher-on-dark .locale-btn {
+  color: rgba(247, 243, 234, 0.72);
+}
+
+.locale-switcher-on-light .locale-btn {
+  color: var(--ink-soft);
+}
+
+.locale-switcher-on-dark .locale-btn.is-active {
+  background: rgba(247, 243, 234, 0.92);
+  color: #1a211c;
+}
+
+.locale-switcher-on-light .locale-btn.is-active {
+  background: var(--moss);
+  color: #f7f3ea;
+}
+
 .landing-hero {
   min-height: 100dvh;
   display: flex;
@@ -175,6 +248,7 @@ a {
 }
 
 .app-frame:has(.dashboard-root) .nav-brand-compact {
+  /* Hero carries brand; nav label stays quiet */
   font-size: 1rem;
   opacity: 0.55;
 }
