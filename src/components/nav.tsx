@@ -5,7 +5,7 @@ import { t } from "@/lib/i18n/messages";
 export function AppNav({ locale }: { locale: Locale }) {
   return (
     <nav className="app-nav" aria-label="Primary">
-      <Link href="/today" className="nav-brand">
+      <Link href="/today" className="nav-brand nav-brand-compact">
         {t(locale, "brand")}
       </Link>
       <div className="nav-links">

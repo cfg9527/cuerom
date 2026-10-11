@@ -12,9 +12,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const locale = (await getUserLocale(session.user.id)) as Locale;
 
   return (
-    <div className="shell">
-      <AppNav locale={locale} />
-      {children}
+    <div className="app-frame">
+      <div className="app-nav-wrap">
+        <AppNav locale={locale} />
+      </div>
+      <div className="page-content">{children}</div>
     </div>
   );
 }
