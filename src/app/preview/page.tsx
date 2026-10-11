@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { PreviewDoneFlow } from "@/components/preview-done-flow";
 import { getPublicLocale } from "@/lib/i18n/locale";
@@ -8,6 +7,10 @@ import { getPreviewDashboardData } from "@/lib/preview/fixtures";
 
 type SearchParams = Promise<{ key?: string | string[] }>;
 
+/**
+ * Secret edition — tokenized demo surface.
+ * Completely independent from the public logged-in app: no auth, no Neon rows.
+ */
 export default async function PreviewPage({
   searchParams,
 }: {
@@ -20,19 +23,17 @@ export default async function PreviewPage({
 
   if (!isValidPreviewKey(key)) {
     return (
-      <main className="shell" lang={locale}>
+      <main className="shell secret-denied" lang={locale}>
         <div className="auth-topbar">
           <p className="nav-brand" style={{ margin: 0 }}>
-            <Link href="/">{t(locale, "brand")}</Link>
+            {t(locale, "previewEdition")}
           </p>
           <LocaleSwitcher locale={locale} tone="on-light" />
         </div>
         <div className="auth-card">
           <h1 className="page-title">{t(locale, "previewBannerShort")}</h1>
           <p className="lede">{t(locale, "previewDenied")}</p>
-          <Link className="btn btn-primary" href="/">
-            {t(locale, "previewHome")}
-          </Link>
+          <p className="muted">{t(locale, "previewNote")}</p>
         </div>
       </main>
     );
@@ -43,15 +44,14 @@ export default async function PreviewPage({
   const totalLevers = data.openCount + data.doneCount;
   const momentumPct =
     totalLevers === 0 ? 0 : Math.round((data.doneCount / totalLevers) * 100);
+
   return (
-    <div className="app-frame preview-frame" lang={locale}>
+    <div className="app-frame preview-frame secret-edition" lang={locale}>
       <div className="preview-banner" role="status">
         <p className="preview-banner-text">
           <strong>{t(locale, "previewBannerShort")}</strong>
           <span aria-hidden="true"> · </span>
-          <span>
-            {locale === "zh" ? "示範資料，不是你的帳號" : "Sample data only — not your account"}
-          </span>
+          <span>{t(locale, "previewBanner")}</span>
         </p>
         <LocaleSwitcher locale={locale} tone="on-light" />
       </div>
@@ -65,23 +65,17 @@ export default async function PreviewPage({
           </div>
           <div className="dash-hero-copy">
             <p id="dash-brand" className="dash-brand">
-              {t(locale, "brand")}
+              {t(locale, "previewEdition")}
             </p>
             <h1 className="dash-headline">{t(locale, "dashboardHeadline")}</h1>
-            <p className="dash-support">{t(locale, "dashboardSupport")}</p>
+            <p className="dash-support">
+              {t(locale, "dashboardSupport")}{" "}
+              <span className="dash-secret-note">{t(locale, "previewNote")}</span>
+            </p>
             <div className="dash-ctas">
-              {hasOpen ? (
-                <a className="btn btn-primary dash-cta-primary" href="#open-tasks">
-                  {t(locale, "dashboardCtaTasks")}
-                </a>
-              ) : (
-                <a className="btn btn-primary dash-cta-primary" href="#open-tasks">
-                  {t(locale, "dashboardCtaRoom")}
-                </a>
-              )}
-              <Link className="btn btn-ghost dash-cta-ghost" href="/">
-                {t(locale, "previewHome")}
-              </Link>
+              <a className="btn btn-primary dash-cta-primary" href="#open-tasks">
+                {hasOpen ? t(locale, "previewTasksCta") : t(locale, "dashboardCtaRoom")}
+              </a>
             </div>
           </div>
         </section>
