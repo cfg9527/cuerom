@@ -13,6 +13,7 @@ Redesign cues and friction in your physical and digital environments so better h
 | Database | Neon Postgres + Drizzle ORM |
 | Auth | **Auth.js (NextAuth v5) + Credentials + Neon** (Clerk preferred in plan; Clerk keys unavailable at scaffold time) |
 | Proof photos | Vercel Blob (`BLOB_READ_WRITE_TOKEN`) |
+| Reflections | **Vercel AI Gateway** + AI SDK (`ai`) — cheapest free model; static encouragement fallback |
 
 ## Features (MVP)
 
@@ -20,10 +21,11 @@ Redesign cues and friction in your physical and digital environments so better h
 - Schema: users, environments, habits, habit_environments, cues, friction_levers, check_ins, proof_photos (+ weekly_reviews table)
 - **Today**: open setup tasks first; light check-ins second
 - Habit + environment detail; mark lever planned → done
-- Done flow: optional proof photo → bilingual encouragement
+- Done flow: optional proof photo → AI ~30-char/word reflection (or static encouragement fallback)
 - Exactly **10** bilingual starter templates
 - Settings: locale EN|中文, tip/support placeholder, delete account
 - Weekly review (rules-based)
+- Dashboard (`/today`): emotionally activating hero + setup-task action plane
 
 ## Local setup
 
@@ -46,6 +48,19 @@ Open [http://localhost:3000](http://localhost:3000).
 | `AUTH_URL` | App URL (e.g. `http://localhost:3000` or production URL) |
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob RW token (proof uploads; optional until you enable photos) |
 | `NEXT_PUBLIC_TIP_URL` | Tip jar URL (placeholder OK) |
+| `AI_GATEWAY_API_KEY` | Vercel AI Gateway key for post-done reflections (optional if Vercel OIDC is available) |
+
+### AI Gateway reflections
+
+After marking a setup task done, CueRoom generates a short bilingual reflection via AI Gateway.
+
+- **Model:** `inclusionai/ling-3.1-flash-free` (see `src/lib/ai/config.ts`) — cheapest on `/v1/models` at ship time (`input`/`output` pricing `0`, tag `free`).
+- **Auth:** set `AI_GATEWAY_API_KEY`, or rely on Vercel OIDC on deployed previews/production.
+- **Fallback:** if the key/OIDC is missing or the call fails, the curated static encouragement pool is shown.
+- **Create a key:**
+  1. [Vercel Dashboard → AI Gateway → API Keys](https://vercel.com/d?to=%2F%5Bteam%5D%2F%5Bproject%5D%2Fai) (or team AI Gateway settings), **or**
+  2. CLI: `vercel ai-gateway api-keys create --name cuerom`
+  3. Add `AI_GATEWAY_API_KEY` to the Vercel project env (Production + Preview) and to `.env.local` for local.
 
 ### Dashboard steps if credentials are missing
 
@@ -53,7 +68,8 @@ Open [http://localhost:3000](http://localhost:3000).
 2. **Vercel** — Import this repo → set the same env vars → deploy.
 3. **Vercel Blob** — Project → Storage → create Blob store → copy `BLOB_READ_WRITE_TOKEN`.
 4. **Tip link** — Replace `NEXT_PUBLIC_TIP_URL` with your Buy Me a Coffee (or similar) URL.
-5. **Clerk (optional later)** — If you prefer Clerk, add Clerk keys and swap the Auth.js provider; schema already has `auth_provider_id`.
+5. **AI Gateway** — Create `AI_GATEWAY_API_KEY` (steps above) for AI reflections; otherwise static copy is used.
+6. **Clerk (optional later)** — If you prefer Clerk, add Clerk keys and swap the Auth.js provider; schema already has `auth_provider_id`.
 
 ## Scripts
 
