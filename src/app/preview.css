@@ -1,1 +1,467 @@
-LOAD_FROM_/tmp/ineffable-locked/preview.css_VERIFIED_26478
+/* Preview banner (legacy denied / public chrome helpers) */
+.preview-frame {
+  padding-top: 0;
+}
+
+.preview-banner {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+  padding: 0.65rem 1.1rem;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ink-terracotta, #A35C4B) 18%, transparent), color-mix(in srgb, var(--ink-brass, #B88B4A) 12%, transparent));
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+
+.preview-banner-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.preview-banner-text strong {
+  color: var(--copper);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Secret edition · deep mind novel ─── */
+.secret-root {
+  /* The Ineffable Kernel — Mineral Brutalism (canonical HEX) */
+  --ink-bone: #E3DEC3;
+  --ink-obsidian: #0C0E12;
+  --ink-basalt: #1E232B;
+  --ink-brass: #B88B4A;
+  --ink-terracotta: #A35C4B;
+
+  /* Semantic roles (60/30/7/3 distribution) */
+  --secret-ink: var(--ink-bone);
+  --secret-ink-soft: color-mix(in srgb, var(--ink-bone) 48%, var(--ink-basalt));
+  --secret-paper: var(--ink-obsidian);
+  --secret-paper-deep: var(--ink-basalt);
+  --secret-rule: color-mix(in srgb, var(--ink-bone) 14%, transparent);
+  --secret-accent: var(--ink-brass);
+  --secret-accent-human: var(--ink-terracotta);
+  --secret-door: var(--ink-basalt);
+  --secret-door-face: color-mix(in srgb, var(--ink-basalt) 82%, var(--ink-brass));
+  --secret-knob: var(--ink-brass);
+  --font-secret-display: var(--font-secret-display), "Noto Serif SC", "Songti SC", serif;
+  --font-secret-body: var(--font-secret-body), "Noto Serif SC", "Songti SC", serif;
+
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 7.5rem) minmax(11rem, 22vw) minmax(0, 1fr);
+  gap: 0;
+  color: color-mix(in srgb, var(--ink-bone) 72%, var(--ink-basalt));
+  font-family: var(--font-secret-body);
+  background:
+    radial-gradient(900px 520px at 12% 0%, color-mix(in srgb, var(--ink-terracotta) 10%, transparent), transparent 55%),
+    radial-gradient(720px 440px at 90% 100%, color-mix(in srgb, var(--ink-brass) 6%, transparent), transparent 52%),
+    linear-gradient(168deg, var(--ink-obsidian) 0%, #0e1116 46%, var(--ink-obsidian) 100%);
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+.secret-atm-ink-dawn {
+  --secret-door-face: color-mix(in srgb, var(--ink-basalt) 78%, var(--ink-terracotta));
+  background:
+    radial-gradient(860px 480px at 18% 8%, color-mix(in srgb, var(--ink-terracotta) 14%, transparent), transparent 58%),
+    linear-gradient(168deg, var(--ink-obsidian) 0%, #12151a 50%, var(--ink-obsidian) 100%);
+}
+
+.secret-atm-desk-light {
+  --secret-door-face: color-mix(in srgb, var(--ink-basalt) 85%, var(--ink-brass));
+  --secret-accent: var(--ink-brass);
+  background:
+    radial-gradient(820px 460px at 70% 12%, color-mix(in srgb, var(--ink-brass) 9%, transparent), transparent 55%),
+    linear-gradient(168deg, var(--ink-obsidian) 0%, #101318 52%, var(--ink-obsidian) 100%);
+}
+
+.secret-atm-night-room {
+  --secret-door-face: var(--ink-basalt);
+  --secret-accent: color-mix(in srgb, var(--ink-brass) 70%, var(--ink-terracotta));
+  background:
+    radial-gradient(800px 480px at 20% 10%, color-mix(in srgb, var(--ink-terracotta) 8%, transparent), transparent 55%),
+    linear-gradient(168deg, #0a0c10 0%, var(--ink-obsidian) 55%, #0a0c10 100%);
+}
+
+/* Left nav */
+.secret-nav {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.75rem 0.65rem 1.5rem;
+  border-right: 1px solid var(--secret-rule);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ink-basalt) 92%, var(--ink-obsidian)), var(--ink-basalt));
+  transition: opacity 0.65s ease, filter 0.65s ease;
+}
+
+.secret-edition-mark {
+  margin: 0 0 1.75rem;
+  font-family: var(--font-secret-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  writing-mode: horizontal-tb;
+  color: var(--secret-ink-soft);
+  opacity: 0.85;
+}
+
+.secret-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  flex: 1;
+  width: 100%;
+  align-items: center;
+}
+
+.secret-toc-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem;
+  border: none;
+  background: transparent;
+  color: var(--secret-ink);
+  cursor: pointer;
+  font: inherit;
+  transition: opacity 0.35s ease;
+}
+
+.secret-toc-item:not(.is-active) {
+  opacity: 0.55;
+}
+
+.secret-toc-item:hover,
+.secret-toc-item:focus-visible {
+  opacity: 1;
+  outline: none;
+}
+
+.secret-toc-mark {
+  font-family: var(--font-secret-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.secret-toc-box {
+  width: 1.1rem;
+  height: 0.72rem;
+  border: 1.5px solid color-mix(in srgb, var(--ink-bone) 35%, var(--ink-basalt));
+  background: transparent;
+  transition: background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.secret-toc-item.is-active .secret-toc-box,
+.secret-toc-item.is-passed .secret-toc-box {
+  background: var(--ink-brass);
+  border-color: var(--ink-brass);
+  box-shadow: inset 0 0 0 1px var(--ink-brass);
+}
+
+.secret-toc-item.is-passed:not(.is-active) .secret-toc-box {
+  opacity: 0.45;
+}
+
+.secret-locale {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+.secret-locale button {
+  border: none;
+  background: transparent;
+  padding: 0.2rem 0.35rem;
+  font-family: var(--font-secret-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--secret-ink-soft);
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+}
+
+.secret-locale button.is-active {
+  color: var(--secret-ink);
+  border-bottom-color: var(--secret-ink);
+}
+
+.secret-mobile-toc-btn {
+  display: none;
+}
+
+.secret-nav-scrim {
+  display: none;
+}
+
+/* Middle door — Gemini chiaroscuro idle + cinematic open */
+.secret-door-col {
+  display: grid;
+  place-items: center;
+  padding: 2rem 0.75rem;
+  position: relative;
+  z-index: 2;
+  border-right: 1px solid var(--secret-rule);
+  background: color-mix(in srgb, var(--ink-basalt) 55%, transparent);
+}
+
+.secret-door-stage {
+  position: relative;
+  width: min(100%, 12rem);
+  aspect-ratio: 3 / 5.2;
+  display: grid;
+  place-items: end center;
+}
+
+.secret-door {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.secret-door:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.secret-door:focus-visible {
+  outline: 2px solid var(--secret-accent);
+  outline-offset: 6px;
+}
+
+.secret-door-shell {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 88%;
+  margin: 0 auto;
+  perspective: 900px;
+  background: var(--ink-obsidian);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--ink-brass) 22%, transparent),
+    0 18px 40px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+.secret-door-leaf {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+}
+
+.secret-door-wood {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, color-mix(in srgb, var(--ink-brass) 16%, transparent) 0%, transparent 42%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.4), transparent 40%, rgba(0, 0, 0, 0.62)),
+    url("/secret-door/idle.jpg") center / cover no-repeat,
+    var(--ink-basalt);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink-bone) 8%, transparent);
+  filter: saturate(0.55) brightness(0.72) contrast(1.05);
+}
+
+.secret-door-handle {
+  position: absolute;
+  top: 46%;
+  right: 14%;
+  width: 1.55rem;
+  height: 2.4rem;
+  z-index: 2;
+}
+
+.secret-door-plate {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.12rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--ink-brass) 88%, var(--ink-bone)) 0%, var(--ink-brass) 45%, color-mix(in srgb, var(--ink-brass) 55%, var(--ink-obsidian)) 100%);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 color-mix(in srgb, var(--ink-bone) 22%, transparent);
+}
+
+.secret-door-plate::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.28rem;
+  width: 0.28rem;
+  height: 0.28rem;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 1px solid rgba(20, 14, 8, 0.55);
+  background: var(--ink-obsidian);
+}
+
+.secret-door-lever {
+  position: absolute;
+  top: 0.42rem;
+  left: 50%;
+  width: 1.35rem;
+  height: 0.28rem;
+  margin-left: -0.18rem;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--ink-brass) 80%, var(--ink-bone)) 0%, var(--ink-brass) 55%, color-mix(in srgb, var(--ink-brass) 60%, var(--ink-obsidian)) 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transform-origin: 0.18rem 50%;
+  transition: transform 0.45s cubic-bezier(0.33, 0.1, 0.2, 1);
+}
+
+.secret-door-draft {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 12%;
+  z-index: 1;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 6px,
+      rgba(28, 24, 20, 0.18) 6px,
+      rgba(28, 24, 20, 0.18) 7px
+    );
+  mask-image: linear-gradient(180deg, transparent, #000 40%, transparent);
+  animation: secret-draft 3.6s ease-in-out infinite;
+}
+
+.secret-door-hint {
+  position: absolute;
+  left: 50%;
+  bottom: -1.6rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--secret-ink-soft);
+  opacity: 0.75;
+}
+
+/* ── RE1 cinematic door → endless dark deep ocean ── */
+.secret-cine {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--ink-obsidian);
+}
+
+.secret-cine-letterbox {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  height: 0;
+  background: var(--ink-obsidian);
+  transition: height 1.2s cubic-bezier(0.22, 0.1, 0.2, 1);
+}
+
+.secret-cine-letterbox-top {
+  top: 0;
+}
+
+.secret-cine-letterbox-bot {
+  bottom: 0;
+}
+
+.door-turn .secret-cine-letterbox,
+.door-open .secret-cine-letterbox,
+.door-cross .secret-cine-letterbox {
+  height: min(11vh, 4.5rem);
+}
+
+.secret-cine-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(
+    ellipse at 50% 48%,
+    transparent 14%,
+    rgba(0, 0, 0, 0.45) 48%,
+    rgba(0, 0, 0, 0.92) 100%
+  );
+  opacity: 0;
+}
+
+.secret-cine-stage {
+  position: relative;
+  z-index: 1;
+  width: min(94vw, 58rem);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  transform-origin: 50% 48%;
+  will-change: transform;
+  background: var(--ink-obsidian);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink-brass) 10%, transparent);
+}
+
+.secret-cine-world {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 52%;
+  will-change: transform;
+}
+
+/* 無盡黑暗深海 — nested abyss (Zoomquilt in water-dark) */
+.secret-cine-abyss {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 58%, color-mix(in srgb, var(--ink-terracotta) 16%, transparent) 0%, transparent 46%),
+    radial-gradient(circle at 50% 48%, var(--ink-basalt) 0%, var(--ink-obsidian) 52%, #080a0e 100%),
+    url("/secret-door/abyss.jpg") center / cover no-repeat,
+    var(--ink-obsidian);
+  transform-origin: 50% 55%;
+  overflow: hidden;
+  filter: saturate(0.35) brightness(0.78) contrast(1.08);
+}
+
+.secret-cine-abyss-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.secret-cine-abyss-layer[data-depth="0"] {
+  background:
+    radial-gradient(ellipse at 48% 58%, color-mix(in srgb, var(--ink-terracotta) 14%, transparent), transparent 52%);
+  opacity: 0.55;
+}
+
+.secret-cine-abyss-layer[data-depth="1"] {
+  background:
+    url("/secret-door/abyss-deep.jpg") center / cover no-repeat;
+  opacity: 0.45;
+  mix-blend-mode: soft-light;
+}
+
+.secret-cine-abyss-layer[data-depth="2"] {
+  background:
+    radial-gradient(circle at 50% 60%, transparent 18%, color-mix(in srgb, var(--ink-obsidian) 70%, transparent) 68%, var(--ink-obsidian) 100%);
+}
+
+.secret-cine-abyss-nest {
