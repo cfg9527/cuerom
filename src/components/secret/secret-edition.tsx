@@ -20,6 +20,8 @@ export function SecretEdition({ locale }: Props) {
   const [doorPhase, setDoorPhase] = useState<
     "idle" | "turn" | "open" | "cross" | "land"
   >("idle");
+  /** Frozen for cutscene so mural doesn’t swap when sceneId advances mid-open */
+  const [doorSkin, setDoorSkin] = useState<"mural" | "pixel">("mural");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [doneStages, setDoneStages] = useState<Record<string, boolean>>({});
   const [narration, setNarration] = useState<Record<string, string>>({});
@@ -38,6 +40,7 @@ export function SecretEdition({ locale }: Props) {
 
   const scene = NOVEL_SCENES.find((s) => s.id === sceneId)!;
   const nextId = nextSceneId(sceneId);
+  const isMuralDoor = doorSkin === "mural";
   const nextScene = nextId ? NOVEL_SCENES.find((s) => s.id === nextId) : null;
   const timersRef = useRef<number[]>([]);
 
@@ -52,6 +55,8 @@ export function SecretEdition({ locale }: Props) {
     (target: SceneId, viaDoor: boolean) => {
       if (target === sceneId) return;
       clearTimers();
+      const skin: "mural" | "pixel" = sceneId === "xu" ? "mural" : "pixel";
+      setDoorSkin(skin);
       if (!viaDoor || reduceMotion) {
         // Calm longer dissolve — not instant
         setDoorPhase("land");
@@ -60,24 +65,30 @@ export function SecretEdition({ locale }: Props) {
             setSceneId(target);
             setMobileNavOpen(false);
             contentRef.current?.querySelector<HTMLElement>("h1")?.focus();
-          }, 900),
-          window.setTimeout(() => setDoorPhase("idle"), 1600),
+          }, 800),
+          window.setTimeout(() => {
+            setDoorPhase("idle");
+            setDoorSkin(target === "xu" ? "mural" : "pixel");
+          }, 1400),
         );
         return;
       }
       // RE1-style door cutscene → endless dark deep ocean (無盡黑暗深海)
-      // ~6.5s: approach/turn → heavy swing → black → slow abyss zoom → land
+      // ~5.2s: approach/turn → heavy swing → black → abyss zoom → land (tightened, still weighted)
       setDoorPhase("turn");
       timersRef.current.push(
-        window.setTimeout(() => setDoorPhase("open"), 1600),
-        window.setTimeout(() => setDoorPhase("cross"), 3400),
+        window.setTimeout(() => setDoorPhase("open"), 1200),
+        window.setTimeout(() => setDoorPhase("cross"), 2600),
         window.setTimeout(() => {
           setSceneId(target);
           setMobileNavOpen(false);
           setDoorPhase("land");
           contentRef.current?.querySelector<HTMLElement>("h1")?.focus();
-        }, 6200),
-        window.setTimeout(() => setDoorPhase("idle"), 7400),
+        }, 5000),
+        window.setTimeout(() => {
+          setDoorPhase("idle");
+          setDoorSkin(target === "xu" ? "mural" : "pixel");
+        }, 5800),
       );
     },
     [clearTimers, reduceMotion, sceneId],
@@ -118,9 +129,10 @@ export function SecretEdition({ locale }: Props) {
 
   return (
     <div
-      className={`secret-root secret-atm-${scene.atmosphere} door-${doorPhase}`}
+      className={`secret-root secret-atm-${scene.atmosphere} door-${doorPhase}${isMuralDoor ? " door-mural" : " door-pixel-skin"}`}
       lang={locale}
       data-scene={sceneId}
+      data-door={isMuralDoor ? "mural" : "pixel"}
     >
       <button
         type="button"
@@ -206,14 +218,16 @@ export function SecretEdition({ locale }: Props) {
                   : "End of the current descent"
             }
           >
-            {/* Idle threshold: pixel Mineral Brutalism door + brass lever */}
-            <span className="secret-door-shell secret-pixel">
+            {/* 序: user mural door; later scenes: pixel Mineral Brutalism */}
+            <span className={`secret-door-shell${isMuralDoor ? " secret-door-shell-mural" : " secret-pixel"}`}>
               <span className="secret-door-leaf">
                 <span className="secret-door-wood" />
-                <span className="secret-door-handle" aria-hidden="true">
-                  <span className="secret-door-plate" />
-                  <span className="secret-door-lever" />
-                </span>
+                {!isMuralDoor ? (
+                  <span className="secret-door-handle" aria-hidden="true">
+                    <span className="secret-door-plate" />
+                    <span className="secret-door-lever" />
+                  </span>
+                ) : null}
               </span>
               <span className="secret-door-draft" aria-hidden="true" />
             </span>
@@ -231,7 +245,7 @@ export function SecretEdition({ locale }: Props) {
       </section>
 
       {/*
-        RE1-style cinematic door (pixel sprites, not photo stills):
+        RE1 cinematic door (~5s): mural (序) or pixel (later) →
         turn → heavy open → black → endless dark deep ocean zoom → land
       */}
       <div className="secret-cine" aria-hidden="true">
@@ -257,10 +271,12 @@ export function SecretEdition({ locale }: Props) {
             {/* Heavy wood leaf — slow RE1 swing */}
             <div className="secret-cine-door">
               <div className="secret-cine-door-face">
-                <span className="secret-cine-handle">
-                  <span className="secret-cine-plate" />
-                  <span className="secret-cine-lever" />
-                </span>
+                {!isMuralDoor ? (
+                  <span className="secret-cine-handle">
+                    <span className="secret-cine-plate" />
+                    <span className="secret-cine-lever" />
+                  </span>
+                ) : null}
               </div>
             </div>
             {/* Handle close-up during turn */}
