@@ -1,4 +1,4 @@
-# restore-trigger: Ineffable Kernel after Zoomquilt overwrite
+# restore-trigger: Ineffable Kernel + RE1 TSX after Zoomquilt overwrite
 name: assemble-preview-css
 on:
   push:
@@ -6,6 +6,12 @@ on:
       - "src/app/_assemble/preview.part0.css"
       - "src/app/_assemble/preview.part1.css"
       - "src/app/_assemble/preview.part2.css"
+      - "src/app/_assemble/secret-edition.b64.0"
+      - "src/app/_assemble/secret-edition.b64.1"
+      - "src/app/_assemble/secret-edition.b64.2"
+      - "src/app/_assemble/secret-edition.b64.3"
+      - "src/app/_assemble/secret-edition.b64.4"
+      - "src/app/_assemble/secret-edition.b64.5"
       - ".github/workflows/assemble-preview-css.yml"
   workflow_dispatch:
 permissions:
@@ -17,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
-      - name: Concatenate Ineffable preview.css
+      - name: Assemble Ineffable CSS + RE1 TSX
         run: |
           set -euo pipefail
           cat src/app/_assemble/preview.part0.css \
@@ -25,20 +31,32 @@ jobs:
               src/app/_assemble/preview.part2.css \
             > src/app/preview.css
           wc -c src/app/preview.css
-          sha1sum src/app/preview.css
           test "$(wc -c < src/app/preview.css)" -eq 26541
           test "$(sha1sum < src/app/preview.css | awk '{print $1}')" = "54b674cbfcde091324bdcdb0e47bb57fc4b88fed"
           grep -q -- "--ink-bone: #E3DEC3" src/app/preview.css
+          grep -q "secret-cine-abyss" src/app/preview.css
           grep -q ".secret-proof-img" src/app/preview.css
-      - name: Commit assembled file
+
+          cat src/app/_assemble/secret-edition.b64.0 src/app/_assemble/secret-edition.b64.1 src/app/_assemble/secret-edition.b64.2 src/app/_assemble/secret-edition.b64.3 src/app/_assemble/secret-edition.b64.4 src/app/_assemble/secret-edition.b64.5 | tr -d '\n' | base64 -d > src/components/secret/secret-edition.tsx
+          wc -c src/components/secret/secret-edition.tsx
+          sha1sum src/components/secret/secret-edition.tsx
+          test "$(wc -c < src/components/secret/secret-edition.tsx)" -eq 14723
+          test "$(sha1sum < src/components/secret/secret-edition.tsx | awk '{print $1}')" = "1c1fc145bbd66eafec275b55449fdce9ce7a826a"
+          grep -q "secret-cine-abyss" src/components/secret/secret-edition.tsx
+          grep -q "1600" src/components/secret/secret-edition.tsx
+          grep -q "3400" src/components/secret/secret-edition.tsx
+          grep -q "6200" src/components/secret/secret-edition.tsx
+          ! grep -q "secret-zq" src/components/secret/secret-edition.tsx
+          ! grep -q "door-engage" src/components/secret/secret-edition.tsx
+      - name: Commit assembled files
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/app/preview.css
+          git add src/app/preview.css src/components/secret/secret-edition.tsx
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0
           fi
-          git commit -m "fix(preview): assemble full Ineffable CSS (26541 bytes)"
+          git commit -m "fix(secret): assemble Ineffable Kernel CSS + RE1 deep-sea TSX"
           git push
