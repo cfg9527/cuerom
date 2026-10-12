@@ -220,4 +220,109 @@ export function SecretEdition({ locale }: Props) {
                             {nextScene?.mark ?? "·"}
                           </span>
                         </span>
-                      </span
+                      </span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </span>
+            <span className="secret-door-draft" aria-hidden="true" />
+            <span className="secret-door-hint">
+              {nextId
+                ? locale === "zh"
+                  ? "推門前行"
+                  : "Pass through"
+                : locale === "zh"
+                  ? "未完 · 且停於此"
+                  : "Unfinished · rest here"}
+            </span>
+          </button>
+        </div>
+      </section>
+
+      {/* Full-stage Zoomquilt camera — continuous scale through nested frames */}
+      <div className="secret-zq-overlay" aria-hidden="true">
+        <div className="secret-zq-vignette" />
+        <div className="secret-zq-camera">
+          <div className="secret-zq-nest">
+            <div className="secret-zq-world" data-depth="0">
+              <div className="secret-zq-world-door">
+                <span className="secret-zq-world-knob" />
+                <div className="secret-zq-world" data-depth="1">
+                  <div className="secret-zq-world-door">
+                    <span className="secret-zq-world-knob" />
+                    <div
+                      className={`secret-zq-world secret-zq-world-next secret-atm-${nextScene?.atmosphere ?? scene.atmosphere}`}
+                      data-depth="2"
+                    >
+                      <span className="secret-zq-world-mark">
+                        {nextScene?.mark ?? "·"}
+                      </span>
+                      <p className="secret-zq-world-title">
+                        {nextScene
+                          ? pickText(locale, nextScene.title.zh, nextScene.title.en)
+                          : ""}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <article
+        ref={contentRef}
+        className="secret-content"
+        aria-labelledby={headingId}
+      >
+        <header className="secret-content-head">
+          <p className="secret-folio">{scene.mark}</p>
+          <h1 id={headingId} className="secret-title" tabIndex={-1}>
+            {pickText(locale, scene.title.zh, scene.title.en)}
+          </h1>
+        </header>
+
+        <div className="secret-stack">
+          {scene.blocks.map((block, i) => {
+            const key = `${scene.id}-${i}`;
+            if (block.kind === "prose") {
+              const primary = locale === "zh" ? block.zh : block.en;
+              const facing = locale === "zh" ? block.en : block.zh;
+              return (
+                <section key={key} className="secret-block secret-prose">
+                  {block.locked ? (
+                    <p className="secret-locked-tag">
+                      {locale === "zh" ? "原文（鎖定）" : "Source (locked)"}
+                    </p>
+                  ) : null}
+                  {primary.split("\n").map((para, pi) => (
+                    <p key={pi}>{para}</p>
+                  ))}
+                  {scene.id === "xu" ? (
+                    <div className="secret-facing" lang={locale === "zh" ? "en" : "zh"}>
+                      {facing.split("\n").map((para, pi) => (
+                        <p key={pi}>{para}</p>
+                      ))}
+                    </div>
+                  ) : null}
+                </section>
+              );
+            }
+            if (block.kind === "label") {
+              return (
+                <p key={key} className="secret-block secret-draft-label">
+                  {pickText(locale, block.zh, block.en)}
+                </p>
+              );
+            }
+            if (block.kind === "note") {
+              return (
+                <p key={key} className="secret-block secret-note">
+                  {pickText(locale, block.zh, block.en)}
+                </p>
+              );
+            }
+            // stage
+            con
