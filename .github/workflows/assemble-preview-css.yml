@@ -2,9 +2,14 @@ name: assemble-preview-css
 on:
   push:
     paths:
-      - "src/app/_assemble/preview.part0.css"
-      - "src/app/_assemble/preview.part1.css"
-      - "src/app/_assemble/preview.part2.css"
+      - "src/app/_assemble/css.0.b64"
+      - "src/app/_assemble/css.1.b64"
+      - "src/app/_assemble/css.2.b64"
+      - "src/app/_assemble/css.3.b64"
+      - "src/app/_assemble/css.4.b64"
+      - "src/app/_assemble/css.5.b64"
+      - "src/app/_assemble/css.6.b64"
+      - "src/app/_assemble/css.7.b64"
       - "src/app/_assemble/secret-edition.b64.0"
       - "src/app/_assemble/secret-edition.b64.1"
       - "src/app/_assemble/secret-edition.b64.2"
@@ -30,10 +35,11 @@ jobs:
           EXPECTED_TSX_SHA="3b4c80c89c618e54b6b852c44ab93283de77b8d9"
           EXPECTED_TSX_SIZE=14744
 
-          cat src/app/_assemble/preview.part0.css \
-              src/app/_assemble/preview.part1.css \
-              src/app/_assemble/preview.part2.css \
-            > src/app/preview.css
+          if [ -f src/app/_assemble/css.0.b64 ]; then
+            cat src/app/_assemble/css.0.b64 src/app/_assemble/css.1.b64 src/app/_assemble/css.2.b64 src/app/_assemble/css.3.b64 src/app/_assemble/css.4.b64 src/app/_assemble/css.5.b64 src/app/_assemble/css.6.b64 src/app/_assemble/css.7.b64 | tr -d '\n' | base64 -d > src/app/preview.css
+          else
+            cat src/app/_assemble/preview.part0.css src/app/_assemble/preview.part1.css src/app/_assemble/preview.part2.css > src/app/preview.css
+          fi
           CSS_SIZE=$(wc -c < src/app/preview.css)
           CSS_SHA=$(sha1sum < src/app/preview.css | awk '{print $1}')
           echo "CSS size=$CSS_SIZE sha=$CSS_SHA"
