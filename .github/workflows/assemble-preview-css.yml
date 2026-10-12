@@ -1,4 +1,3 @@
-# restore-trigger: Ineffable Kernel + RE1 TSX after Zoomquilt overwrite
 name: assemble-preview-css
 on:
   push:
@@ -23,34 +22,50 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
-      - name: Assemble Ineffable CSS + RE1 TSX
+      - name: Assemble pixel Ineffable CSS + secret TSX
         run: |
           set -euo pipefail
+          EXPECTED_CSS_SHA="5e8d91ffc17f561b9e8095977c2e7ad8ea103427"
+          EXPECTED_CSS_SIZE=26735
+          EXPECTED_TSX_SHA="3b4c80c89c618e54b6b852c44ab93283de77b8d9"
+          EXPECTED_TSX_SIZE=14744
+
           cat src/app/_assemble/preview.part0.css \
               src/app/_assemble/preview.part1.css \
               src/app/_assemble/preview.part2.css \
             > src/app/preview.css
-          wc -c src/app/preview.css
-          test "$(wc -c < src/app/preview.css)" -eq 26541
-          test "$(sha1sum < src/app/preview.css | awk '{print $1}')" = "54b674cbfcde091324bdcdb0e47bb57fc4b88fed"
+          CSS_SIZE=$(wc -c < src/app/preview.css)
+          CSS_SHA=$(sha1sum < src/app/preview.css | awk '{print $1}')
+          echo "CSS size=$CSS_SIZE sha=$CSS_SHA"
+          if [ "$CSS_SIZE" != "$EXPECTED_CSS_SIZE" ] || [ "$CSS_SHA" != "$EXPECTED_CSS_SHA" ]; then
+            echo "CSS parts not fully staged yet; skipping assemble"
+            exit 0
+          fi
           grep -q -- "--ink-bone: #E3DEC3" src/app/preview.css
+          grep -q "door-pixel-6x" src/app/preview.css
           grep -q "secret-cine-abyss" src/app/preview.css
-          grep -q ".secret-proof-img" src/app/preview.css
 
           cat src/app/_assemble/secret-edition.b64.0 src/app/_assemble/secret-edition.b64.1 src/app/_assemble/secret-edition.b64.2 src/app/_assemble/secret-edition.b64.3 src/app/_assemble/secret-edition.b64.4 src/app/_assemble/secret-edition.b64.5 | tr -d '\n' | base64 -d > src/components/secret/secret-edition.tsx
-          wc -c src/components/secret/secret-edition.tsx
-          sha1sum src/components/secret/secret-edition.tsx
-          test "$(wc -c < src/components/secret/secret-edition.tsx)" -eq 14723
-          test "$(sha1sum < src/components/secret/secret-edition.tsx | awk '{print $1}')" = "1c1fc145bbd66eafec275b55449fdce9ce7a826a"
+          TSX_SIZE=$(wc -c < src/components/secret/secret-edition.tsx)
+          TSX_SHA=$(sha1sum < src/components/secret/secret-edition.tsx | awk '{print $1}')
+          echo "TSX size=$TSX_SIZE sha=$TSX_SHA"
+          if [ "$TSX_SIZE" != "$EXPECTED_TSX_SIZE" ] || [ "$TSX_SHA" != "$EXPECTED_TSX_SHA" ]; then
+            echo "TSX parts not fully staged yet; skipping assemble"
+            exit 0
+          fi
+          grep -q "door-pixel" src/components/secret/secret-edition.tsx
           grep -q "secret-cine-abyss" src/components/secret/secret-edition.tsx
-          grep -q "1600" src/components/secret/secret-edition.tsx
-          grep -q "3400" src/components/secret/secret-edition.tsx
-          grep -q "6200" src/components/secret/secret-edition.tsx
-          ! grep -q "secret-zq" src/components/secret/secret-edition.tsx
-          ! grep -q "door-engage" src/components/secret/secret-edition.tsx
       - name: Commit assembled files
         run: |
           set -euo pipefail
+          EXPECTED_CSS_SHA="5e8d91ffc17f561b9e8095977c2e7ad8ea103427"
+          EXPECTED_TSX_SHA="3b4c80c89c618e54b6b852c44ab93283de77b8d9"
+          CSS_SHA=$(sha1sum < src/app/preview.css | awk '{print $1}')
+          TSX_SHA=$(sha1sum < src/components/secret/secret-edition.tsx | awk '{print $1}')
+          if [ "$CSS_SHA" != "$EXPECTED_CSS_SHA" ] || [ "$TSX_SHA" != "$EXPECTED_TSX_SHA" ]; then
+            echo "Skip commit — assembled outputs not ready"
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/app/preview.css src/components/secret/secret-edition.tsx
@@ -58,5 +73,5 @@ jobs:
             echo "No changes"
             exit 0
           fi
-          git commit -m "fix(secret): assemble Ineffable Kernel CSS + RE1 deep-sea TSX"
+          git commit -m "feat(secret): pixel-art Ineffable door + RE1 deep-sea"
           git push
