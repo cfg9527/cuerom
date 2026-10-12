@@ -325,4 +325,67 @@ export function SecretEdition({ locale }: Props) {
               );
             }
             // stage
-            con
+            const done = Boolean(doneStages[key]);
+            return (
+              <section key={key} className="secret-block secret-stage">
+                <p className="secret-stage-line">
+                  {pickText(locale, block.zh, block.en)}
+                </p>
+                {!done ? (
+                  <button
+                    type="button"
+                    className="secret-stage-btn"
+                    disabled={pending}
+                    onClick={() => completeStage(block, key)}
+                  >
+                    {locale === "zh"
+                      ? "完成這一幕的舞台指示"
+                      : "Carry out this stage direction"}
+                  </button>
+                ) : (
+                  <div className="secret-marginalia">
+                    <p className="secret-marginalia-kicker">
+                      {locale === "zh" ? "道具已就位 · 旁白" : "Prop in place · Narration"}
+                    </p>
+                    <p className="secret-marginalia-body">
+                      {narration[key] ??
+                        (locale === "zh" ? "……" : "…")}
+                    </p>
+                    <label className="secret-proof">
+                      <span>
+                        {locale === "zh" ? "可選實證（本機預覽，不上傳帳號）" : "Optional proof (local preview only)"}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          // Local object URL only — never hits public Blob/account.
+                          const url = URL.createObjectURL(file);
+                          const img = e.currentTarget
+                            .closest(".secret-marginalia")
+                            ?.querySelector<HTMLImageElement>(".secret-proof-img");
+                          if (img) {
+                            img.src = url;
+                            img.hidden = false;
+                          }
+                        }}
+                      />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img className="secret-proof-img" alt="" hidden />
+                    </label>
+                  </div>
+                )}
+              </section>
+            );
+          })}
+        </div>
+      </article>
+    </div>
+  );
+}
+
+function sceneIndexPassed(current: SceneId, candidate: SceneId): boolean {
+  return SCENE_ORDER.indexOf(candidate) < SCENE_ORDER.indexOf(current);
+}
