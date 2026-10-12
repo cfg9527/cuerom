@@ -358,4 +358,178 @@
       rgba(28, 24, 20, 0.18) 6px,
       rgba(28, 24, 20, 0.18) 7px
     );
-  mask-image: linear-gradient(1
+  mask-image: linear-gradient(180deg, transparent, #000 40%, transparent);
+  animation: secret-draft 3.6s ease-in-out infinite;
+}
+
+.secret-door-hint {
+  position: absolute;
+  left: 50%;
+  bottom: -1.6rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--secret-ink-soft);
+  opacity: 0.75;
+}
+
+/* ── Zoomquilt full-stage camera overlay ──
+   Continuous scale into nested frames; next world already inside. */
+.secret-zq-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  display: grid;
+  place-items: center;
+  background: transparent;
+}
+
+.secret-zq-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 38% 48%,
+    transparent 12%,
+    rgba(12, 9, 6, 0.35) 42%,
+    rgba(8, 6, 4, 0.88) 100%
+  );
+  opacity: 0;
+}
+
+.secret-zq-camera {
+  position: relative;
+  width: min(42vw, 16rem);
+  aspect-ratio: 3 / 5.1;
+  transform-origin: 50% 48%;
+  will-change: transform;
+}
+
+.secret-zq-nest {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.secret-zq-world {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.secret-zq-world[data-depth="0"] {
+  padding: 0.55rem;
+  background: linear-gradient(180deg, #5a4a3a 0%, #3a2e24 100%);
+  box-shadow:
+    0 0 0 1px rgba(28, 24, 20, 0.4),
+    0 24px 60px rgba(8, 6, 4, 0.45);
+}
+
+.secret-zq-world-door {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 40%),
+    linear-gradient(180deg, var(--secret-door-face, #3d3228), #1a1410);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+  display: grid;
+  place-items: center;
+}
+
+.secret-zq-world-knob {
+  position: absolute;
+  top: 48%;
+  right: 11%;
+  z-index: 2;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #efe0c4, var(--secret-knob) 55%, #8a6d3e);
+}
+
+/* Nested frame ≈ 34% — continuous zoom fills each aperture into the next */
+.secret-zq-world[data-depth="1"] {
+  width: 34%;
+  height: 38%;
+  padding: 0.28rem;
+  background: linear-gradient(180deg, #4a3c30 0%, #2a221c 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    inset 0 0 20px rgba(0, 0, 0, 0.35);
+}
+
+.secret-zq-world[data-depth="1"] .secret-zq-world-knob {
+  width: 0.36rem;
+  height: 0.36rem;
+}
+
+.secret-zq-world[data-depth="2"],
+.secret-zq-world-next {
+  width: 34%;
+  height: 38%;
+  padding: 0;
+  display: grid;
+  place-content: center;
+  gap: 0.2rem;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(242, 235, 224, 0.25), transparent 55%),
+    linear-gradient(165deg, #3a3228 0%, #12100c 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55);
+}
+
+.secret-zq-world-next.secret-atm-desk-light {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(170, 195, 160, 0.35), transparent 55%),
+    linear-gradient(165deg, #3d4a40 0%, #141a16 100%);
+}
+
+.secret-zq-world-next.secret-atm-night-room {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(100, 90, 130, 0.35), transparent 55%),
+    linear-gradient(165deg, #2c2434 0%, #0e0c12 100%);
+}
+
+.secret-zq-world-mark {
+  font-family: var(--font-secret-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+  color: rgba(247, 241, 230, 0.88);
+}
+
+.secret-zq-world-title {
+  margin: 0;
+  padding: 0 0.35rem;
+  font-family: var(--font-secret-body);
+  font-size: 0.42rem;
+  letter-spacing: 0.04em;
+  color: rgba(247, 241, 230, 0.55);
+  line-height: 1.3;
+}
+
+/* Phase: engage — ease camera toward door; vignette; content into depth */
+.door-engage .secret-door {
+  transform: scale(1.22);
+  filter: brightness(0.88) saturate(0.92);
+}
+
+.door-engage .secret-nav {
+  opacity: 0.45;
+  filter: blur(0.5px);
+  transition: opacity 0.65s ease, filter 0.65s ease;
+}
+
+.door-engage .secret-content {
+  opacity: 0.28;
+  transform: scale(0.96) translateY(0.4rem);
+  filter: blur(1.5px);
+}
+
+.door-engage .secret-zq-overla
