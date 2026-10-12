@@ -1,0 +1,86 @@
+name: assemble-preview-css
+on:
+  push:
+    paths:
+      - "src/app/_assemble/css.0.b64"
+      - "src/app/_assemble/css.1.b64"
+      - "src/app/_assemble/css.2.b64"
+      - "src/app/_assemble/css.3.b64"
+      - "src/app/_assemble/css.4.b64"
+      - "src/app/_assemble/css.5.b64"
+      - "src/app/_assemble/css.6.b64"
+      - "src/app/_assemble/css.7.b64"
+      - "src/app/_assemble/secret-edition.b64.0"
+      - "src/app/_assemble/secret-edition.b64.1"
+      - "src/app/_assemble/secret-edition.b64.2"
+      - "src/app/_assemble/secret-edition.b64.3"
+      - "src/app/_assemble/secret-edition.b64.4"
+      - "src/app/_assemble/secret-edition.b64.5"
+      - ".github/workflows/assemble-preview-css.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Assemble mural-first CSS + secret TSX
+        run: |
+          set -euo pipefail
+          EXPECTED_CSS_SHA="fb441c8c0641be72a852d92901906938160afc90"
+          EXPECTED_CSS_SIZE=28645
+          EXPECTED_TSX_SHA="b893e1faf795d054445fa5aace0ab6245467c7a5"
+          EXPECTED_TSX_SIZE=15527
+
+          if [ -f src/app/_assemble/css.0.b64 ]; then
+            cat src/app/_assemble/css.0.b64 src/app/_assemble/css.1.b64 src/app/_assemble/css.2.b64 src/app/_assemble/css.3.b64 src/app/_assemble/css.4.b64 src/app/_assemble/css.5.b64 src/app/_assemble/css.6.b64 src/app/_assemble/css.7.b64 | tr -d '\n' | base64 -d > src/app/preview.css
+          else
+            cat src/app/_assemble/preview.part0.css src/app/_assemble/preview.part1.css src/app/_assemble/preview.part2.css > src/app/preview.css
+          fi
+          CSS_SIZE=$(wc -c < src/app/preview.css)
+          CSS_SHA=$(sha1sum < src/app/preview.css | awk '{print $1}')
+          echo "CSS size=$CSS_SIZE sha=$CSS_SHA"
+          if [ "$CSS_SIZE" != "$EXPECTED_CSS_SIZE" ] || [ "$CSS_SHA" != "$EXPECTED_CSS_SHA" ]; then
+            echo "CSS parts not fully staged yet; skipping assemble"
+            exit 0
+          fi
+          grep -q -- "--ink-bone: #E3DEC3" src/app/preview.css
+          grep -q "door-mural-first" src/app/preview.css
+          grep -q "secret-cine-abyss" src/app/preview.css
+
+          cat src/app/_assemble/secret-edition.b64.0 src/app/_assemble/secret-edition.b64.1 src/app/_assemble/secret-edition.b64.2 src/app/_assemble/secret-edition.b64.3 src/app/_assemble/secret-edition.b64.4 src/app/_assemble/secret-edition.b64.5 | tr -d '\n' | base64 -d > src/components/secret/secret-edition.tsx
+          TSX_SIZE=$(wc -c < src/components/secret/secret-edition.tsx)
+          TSX_SHA=$(sha1sum < src/components/secret/secret-edition.tsx | awk '{print $1}')
+          echo "TSX size=$TSX_SIZE sha=$TSX_SHA"
+          if [ "$TSX_SIZE" != "$EXPECTED_TSX_SIZE" ] || [ "$TSX_SHA" != "$EXPECTED_TSX_SHA" ]; then
+            echo "TSX parts not fully staged yet; skipping assemble"
+            exit 0
+          fi
+          grep -q "doorSkin" src/components/secret/secret-edition.tsx
+          grep -q "isMuralDoor" src/components/secret/secret-edition.tsx
+          grep -q "secret-cine-abyss" src/components/secret/secret-edition.tsx
+          grep -q "1200" src/components/secret/secret-edition.tsx
+          grep -q "5800" src/components/secret/secret-edition.tsx
+      - name: Commit assembled files
+        run: |
+          set -euo pipefail
+          EXPECTED_CSS_SHA="fb441c8c0641be72a852d92901906938160afc90"
+          EXPECTED_TSX_SHA="b893e1faf795d054445fa5aace0ab6245467c7a5"
+          CSS_SHA=$(sha1sum < src/app/preview.css | awk '{print $1}')
+          TSX_SHA=$(sha1sum < src/components/secret/secret-edition.tsx | awk '{print $1}')
+          if [ "$CSS_SHA" != "$EXPECTED_CSS_SHA" ] || [ "$TSX_SHA" != "$EXPECTED_TSX_SHA" ]; then
+            echo "Skip commit — assembled outputs not ready"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/app/preview.css src/components/secret/secret-edition.tsx
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "feat(secret): first door uses user mural; tighten RE1 ~5s"
+          git push
