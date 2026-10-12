@@ -27,13 +27,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
-      - name: Assemble pixel Ineffable CSS + secret TSX
+      - name: Assemble mural-first CSS + secret TSX
         run: |
           set -euo pipefail
-          EXPECTED_CSS_SHA="5e8d91ffc17f561b9e8095977c2e7ad8ea103427"
-          EXPECTED_CSS_SIZE=26735
-          EXPECTED_TSX_SHA="3b4c80c89c618e54b6b852c44ab93283de77b8d9"
-          EXPECTED_TSX_SIZE=14744
+          EXPECTED_CSS_SHA="fb441c8c0641be72a852d92901906938160afc90"
+          EXPECTED_CSS_SIZE=28645
+          EXPECTED_TSX_SHA="b893e1faf795d054445fa5aace0ab6245467c7a5"
+          EXPECTED_TSX_SIZE=15527
 
           if [ -f src/app/_assemble/css.0.b64 ]; then
             cat src/app/_assemble/css.0.b64 src/app/_assemble/css.1.b64 src/app/_assemble/css.2.b64 src/app/_assemble/css.3.b64 src/app/_assemble/css.4.b64 src/app/_assemble/css.5.b64 src/app/_assemble/css.6.b64 src/app/_assemble/css.7.b64 | tr -d '\n' | base64 -d > src/app/preview.css
@@ -48,7 +48,7 @@ jobs:
             exit 0
           fi
           grep -q -- "--ink-bone: #E3DEC3" src/app/preview.css
-          grep -q "door-pixel-6x" src/app/preview.css
+          grep -q "door-mural-first" src/app/preview.css
           grep -q "secret-cine-abyss" src/app/preview.css
 
           cat src/app/_assemble/secret-edition.b64.0 src/app/_assemble/secret-edition.b64.1 src/app/_assemble/secret-edition.b64.2 src/app/_assemble/secret-edition.b64.3 src/app/_assemble/secret-edition.b64.4 src/app/_assemble/secret-edition.b64.5 | tr -d '\n' | base64 -d > src/components/secret/secret-edition.tsx
@@ -59,13 +59,16 @@ jobs:
             echo "TSX parts not fully staged yet; skipping assemble"
             exit 0
           fi
-          grep -q "secret-pixel" src/components/secret/secret-edition.tsx
+          grep -q "doorSkin" src/components/secret/secret-edition.tsx
+          grep -q "isMuralDoor" src/components/secret/secret-edition.tsx
           grep -q "secret-cine-abyss" src/components/secret/secret-edition.tsx
+          grep -q "1200" src/components/secret/secret-edition.tsx
+          grep -q "5800" src/components/secret/secret-edition.tsx
       - name: Commit assembled files
         run: |
           set -euo pipefail
-          EXPECTED_CSS_SHA="5e8d91ffc17f561b9e8095977c2e7ad8ea103427"
-          EXPECTED_TSX_SHA="3b4c80c89c618e54b6b852c44ab93283de77b8d9"
+          EXPECTED_CSS_SHA="fb441c8c0641be72a852d92901906938160afc90"
+          EXPECTED_TSX_SHA="b893e1faf795d054445fa5aace0ab6245467c7a5"
           CSS_SHA=$(sha1sum < src/app/preview.css | awk '{print $1}')
           TSX_SHA=$(sha1sum < src/components/secret/secret-edition.tsx | awk '{print $1}')
           if [ "$CSS_SHA" != "$EXPECTED_CSS_SHA" ] || [ "$TSX_SHA" != "$EXPECTED_TSX_SHA" ]; then
@@ -79,5 +82,5 @@ jobs:
             echo "No changes"
             exit 0
           fi
-          git commit -m "feat(secret): pixel-art Ineffable door + RE1 deep-sea"
+          git commit -m "feat(secret): first door uses user mural; tighten RE1 ~5s"
           git push
