@@ -1,1 +1,68 @@
-PLACEHOLDER_WILL_REPLACE
+/* Preview banner (legacy denied / public chrome helpers) */
+.preview-frame {
+  padding-top: 0;
+}
+
+.preview-banner {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+  padding: 0.65rem 1.1rem;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ink-terracotta, #A35C4B) 18%, transparent), color-mix(in srgb, var(--ink-brass, #B88B4A) 12%, transparent));
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+
+.preview-banner-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.preview-banner-text strong {
+  color: var(--copper);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Secret edition · deep mind novel ─── */
+.secret-root {
+  /* The Ineffable Kernel — Mineral Brutalism (canonical HEX) */
+  --ink-bone: #E3DEC3;
+  --ink-obsidian: #0C0E12;
+  --ink-basalt: #1E232B;
+  --ink-brass: #B88B4A;
+  --ink-terracotta: #A35C4B;
+
+  /* Semantic roles (60/30/7/3 distribution) */
+  --secret-ink: var(--ink-bone);
+  --secret-ink-soft: color-mix(in srgb, var(--ink-bone) 48%, var(--ink-basalt));
+  --secret-paper: var(--ink-obsidian);
+  --secret-paper-deep: var(--ink-basalt);
+  --secret-rule: color-mix(in srgb, var(--ink-bone) 14%, transparent);
+  --secret-accent: var(--ink-brass);
+  --secret-accent-human: var(--ink-terracotta);
+  --secret-door: var(--ink-basalt);
+  --secret-door-face: color-mix(in srgb, var(--ink-basalt) 82%, var(--ink-brass));
+  --secret-knob: var(--ink-brass);
+  --font-secret-display: var(--font-secret-display), "Noto Serif SC", "Songti SC", serif;
+  --font-secret-body: var(--font-secret-body), "Noto Serif SC", "Songti SC", serif;
+
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 7.5rem) minmax(11rem, 22vw) minmax(0, 1fr);
+  gap: 0;
+  color: color-mix(in srgb, var(--ink-bone) 72%, var(--ink-basalt));
+  font-family: var(--font-secret-body);
+  background:
+    radial-gradient(900px 520px at 12% 0%, color-mix(in srgb, var(--ink-terracotta) 10%, transparent), transparent 55%),
+    radial-gradient(720px 440px at 90% 100%, color-mix(in srgb, var(--ink-brass) 6%, transparent), transparent 52%),
+    linear-gradient(168deg, var(--ink-obsidian) 0%, #0e1116 46%, var(--ink-obsidian) 100%);
+  background-attachment: fixed;
+  overflow: hidden;
+}
