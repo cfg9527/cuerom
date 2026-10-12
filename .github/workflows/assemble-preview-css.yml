@@ -59,7 +59,7 @@ jobs:
             echo "TSX parts not fully staged yet; skipping assemble"
             exit 0
           fi
-          grep -q "door-pixel" src/components/secret/secret-edition.tsx
+          grep -q "secret-pixel" src/components/secret/secret-edition.tsx
           grep -q "secret-cine-abyss" src/components/secret/secret-edition.tsx
       - name: Commit assembled files
         run: |
