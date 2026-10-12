@@ -1,1 +1,1 @@
-@file:///tmp/mcp_file_0_content.txt
+PLACEHOLDER_WILL_REPLACE
