@@ -1,1 +1,361 @@
-PLACEHOLDER_WILL_REPLACE_WITH_DISK
+/* Preview banner (legacy denied / public chrome helpers) */
+.preview-frame {
+  padding-top: 0;
+}
+
+.preview-banner {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+  padding: 0.65rem 1.1rem;
+  background: linear-gradient(90deg, rgba(184, 92, 56, 0.14), rgba(47, 93, 74, 0.12));
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+
+.preview-banner-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.preview-banner-text strong {
+  color: var(--copper);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Secret edition · deep mind novel ─── */
+.secret-root {
+  --secret-ink: #1c1814;
+  --secret-ink-soft: #4a4036;
+  --secret-paper: #f2ebe0;
+  --secret-paper-deep: #e6dccb;
+  --secret-rule: rgba(28, 24, 20, 0.14);
+  --secret-accent: #6b4a2e;
+  --secret-door: #2a221c;
+  --secret-door-face: #3d3228;
+  --secret-knob: #c4a574;
+  --font-secret-display: var(--font-secret-display), "Noto Serif SC", "Songti SC", serif;
+  --font-secret-body: var(--font-secret-body), "Noto Serif SC", "Songti SC", serif;
+
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 7.5rem) minmax(11rem, 22vw) minmax(0, 1fr);
+  gap: 0;
+  color: var(--secret-ink);
+  font-family: var(--font-secret-body);
+  background:
+    radial-gradient(900px 500px at 8% 0%, rgba(107, 74, 46, 0.08), transparent 55%),
+    radial-gradient(700px 420px at 92% 100%, rgba(28, 24, 20, 0.06), transparent 50%),
+    linear-gradient(165deg, #f7f1e6 0%, var(--secret-paper) 42%, #e8dfd0 100%);
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+.secret-atm-ink-dawn {
+  --secret-door-face: #3a3128;
+}
+
+.secret-atm-desk-light {
+  --secret-door-face: #364038;
+  --secret-accent: #3d5a4a;
+}
+
+.secret-atm-night-room {
+  --secret-door-face: #1e1a24;
+  --secret-accent: #5a4a6a;
+  background:
+    radial-gradient(800px 480px at 20% 10%, rgba(40, 36, 52, 0.12), transparent 55%),
+    linear-gradient(165deg, #ebe4d8 0%, #e4dcd0 50%, #d8cfc2 100%);
+}
+
+/* Left nav */
+.secret-nav {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.75rem 0.65rem 1.5rem;
+  border-right: 1px solid var(--secret-rule);
+  background: linear-gradient(180deg, rgba(255, 252, 246, 0.55), rgba(242, 235, 224, 0.35));
+  transition: opacity 0.65s ease, filter 0.65s ease;
+}
+
+.secret-edition-mark {
+  margin: 0 0 1.75rem;
+  font-family: var(--font-secret-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  writing-mode: horizontal-tb;
+  color: var(--secret-ink-soft);
+  opacity: 0.85;
+}
+
+.secret-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  flex: 1;
+  width: 100%;
+  align-items: center;
+}
+
+.secret-toc-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem;
+  border: none;
+  background: transparent;
+  color: var(--secret-ink);
+  cursor: pointer;
+  font: inherit;
+  transition: opacity 0.35s ease;
+}
+
+.secret-toc-item:not(.is-active) {
+  opacity: 0.55;
+}
+
+.secret-toc-item:hover,
+.secret-toc-item:focus-visible {
+  opacity: 1;
+  outline: none;
+}
+
+.secret-toc-mark {
+  font-family: var(--font-secret-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.secret-toc-box {
+  width: 1.1rem;
+  height: 0.72rem;
+  border: 1.5px solid var(--secret-ink);
+  background: transparent;
+  transition: background 0.35s ease, box-shadow 0.35s ease;
+}
+
+.secret-toc-item.is-active .secret-toc-box,
+.secret-toc-item.is-passed .secret-toc-box {
+  background: var(--secret-ink);
+  box-shadow: inset 0 0 0 1px var(--secret-ink);
+}
+
+.secret-toc-item.is-passed:not(.is-active) .secret-toc-box {
+  opacity: 0.45;
+}
+
+.secret-locale {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+.secret-locale button {
+  border: none;
+  background: transparent;
+  padding: 0.2rem 0.35rem;
+  font-family: var(--font-secret-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--secret-ink-soft);
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+}
+
+.secret-locale button.is-active {
+  color: var(--secret-ink);
+  border-bottom-color: var(--secret-ink);
+}
+
+.secret-mobile-toc-btn {
+  display: none;
+}
+
+.secret-nav-scrim {
+  display: none;
+}
+
+/* Middle door */
+.secret-door-col {
+  display: grid;
+  place-items: center;
+  padding: 2rem 0.75rem;
+  position: relative;
+  z-index: 2;
+  border-right: 1px solid var(--secret-rule);
+}
+
+.secret-door-stage {
+  position: relative;
+  width: min(100%, 11.5rem);
+  aspect-ratio: 3 / 5.2;
+  display: grid;
+  place-items: end center;
+}
+
+.secret-door {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transform-origin: 50% 48%;
+  transition:
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter 0.7s ease;
+}
+
+.secret-door:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.secret-door:focus-visible {
+  outline: 2px solid var(--secret-accent);
+  outline-offset: 6px;
+}
+
+.secret-door-frame,
+.secret-zq-frame {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 88%;
+  margin: 0 auto;
+  padding: 0.45rem;
+  background: linear-gradient(180deg, #5a4a3a 0%, #3a2e24 100%);
+  box-shadow:
+    0 0 0 1px rgba(28, 24, 20, 0.35),
+    0 18px 40px rgba(28, 24, 20, 0.18);
+  box-sizing: border-box;
+}
+
+.secret-door-panel {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 40%),
+    linear-gradient(180deg, var(--secret-door-face), #241c16);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.secret-door-knob {
+  position: absolute;
+  top: 48%;
+  right: 12%;
+  z-index: 3;
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #efe0c4, var(--secret-knob) 55%, #8a6d3e);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* Nested aperture already painted inside the door (Zoomquilt) */
+.secret-zq-aperture {
+  position: absolute;
+  inset: 18% 22% 16%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.secret-zq-aperture > .secret-zq-frame {
+  width: 100%;
+  height: 100%;
+  padding: 0.28rem;
+  margin: 0;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.45),
+    inset 0 0 18px rgba(0, 0, 0, 0.35);
+}
+
+.secret-zq-inner-panel {
+  background:
+    linear-gradient(180deg, #2e261f 0%, #14100c 100%);
+}
+
+.secret-zq-knob-sm {
+  width: 0.38rem;
+  height: 0.38rem;
+  right: 14%;
+}
+
+.secret-zq-next {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(242, 235, 224, 0.22), transparent 55%),
+    linear-gradient(165deg, #3a3228 0%, #1a1410 100%);
+  box-shadow: none;
+}
+
+.secret-zq-next.secret-atm-desk-light {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(180, 200, 170, 0.28), transparent 55%),
+    linear-gradient(165deg, #3a453c 0%, #1a221c 100%);
+}
+
+.secret-zq-next.secret-atm-night-room {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(90, 80, 120, 0.3), transparent 55%),
+    linear-gradient(165deg, #2a2430 0%, #100e14 100%);
+}
+
+.secret-zq-next-glow {
+  position: absolute;
+  inset: 20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 235, 224, 0.2), transparent 70%);
+}
+
+.secret-zq-next-mark {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-secret-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  color: rgba(242, 235, 224, 0.72);
+}
+
+.secret-door-draft {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 12%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 6px,
+      rgba(28, 24, 20, 0.18) 6px,
+      rgba(28, 24, 20, 0.18) 7px
+    );
+  mask-image: linear-gradient(1
