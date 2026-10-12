@@ -17,9 +17,9 @@ type Props = { locale: Locale };
 
 export function SecretEdition({ locale }: Props) {
   const [sceneId, setSceneId] = useState<SceneId>("xu");
-  const [doorPhase, setDoorPhase] = useState<
-    "idle" | "turn" | "open" | "cross" | "land"
-  >("idle");
+  const [doorPhase, setDoorPhase] = useState<"idle" | "engage" | "cross" | "land">(
+    "idle",
+  );
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [doneStages, setDoneStages] = useState<Record<string, boolean>>({});
   const [narration, setNarration] = useState<Record<string, string>>({});
@@ -53,31 +53,27 @@ export function SecretEdition({ locale }: Props) {
       if (target === sceneId) return;
       clearTimers();
       if (!viaDoor || reduceMotion) {
-        // Calm longer dissolve — not instant
         setDoorPhase("land");
-        timersRef.current.push(
-          window.setTimeout(() => {
-            setSceneId(target);
-            setMobileNavOpen(false);
-            contentRef.current?.querySelector<HTMLElement>("h1")?.focus();
-          }, 900),
-          window.setTimeout(() => setDoorPhase("idle"), 1600),
-        );
+        setSceneId(target);
+        setMobileNavOpen(false);
+        requestAnimationFrame(() => {
+          contentRef.current?.querySelector<HTMLElement>("h1")?.focus();
+          setDoorPhase("idle");
+        });
         return;
       }
-      // RE1-style door cutscene → endless dark deep ocean (無盡黑暗深海)
-      // ~6.5s: approach/turn → heavy swing → black → slow abyss zoom → land
-      setDoorPhase("turn");
+      // Zoomquilt-class continuous nest zoom:
+      // engage → ease toward aperture · cross → scale through nested doors · land
+      setDoorPhase("engage");
       timersRef.current.push(
-        window.setTimeout(() => setDoorPhase("open"), 1600),
-        window.setTimeout(() => setDoorPhase("cross"), 3400),
+        window.setTimeout(() => setDoorPhase("cross"), 680),
         window.setTimeout(() => {
           setSceneId(target);
           setMobileNavOpen(false);
           setDoorPhase("land");
           contentRef.current?.querySelector<HTMLElement>("h1")?.focus();
-        }, 6200),
-        window.setTimeout(() => setDoorPhase("idle"), 7400),
+        }, 2100),
+        window.setTimeout(() => setDoorPhase("idle"), 2680),
       );
     },
     [clearTimers, reduceMotion, sceneId],
@@ -206,185 +202,22 @@ export function SecretEdition({ locale }: Props) {
                   : "End of the current descent"
             }
           >
-            {/* Idle threshold: dark wood + brass lever (Gemini chiaroscuro) */}
-            <span className="secret-door-shell">
-              <span className="secret-door-leaf">
-                <span className="secret-door-wood" />
-                <span className="secret-door-handle" aria-hidden="true">
-                  <span className="secret-door-plate" />
-                  <span className="secret-door-lever" />
-                </span>
-              </span>
-              <span className="secret-door-draft" aria-hidden="true" />
-            </span>
-            <span className="secret-door-hint">
-              {nextId
-                ? locale === "zh"
-                  ? "推門前行"
-                  : "Pass through"
-                : locale === "zh"
-                  ? "未完 · 且停於此"
-                  : "Unfinished · rest here"}
-            </span>
-          </button>
-        </div>
-      </section>
-
-      {/*
-        RE1-style cinematic door (not Gemini’s player):
-        turn → heavy open → black → endless dark deep ocean zoom → land
-      */}
-      <div className="secret-cine" aria-hidden="true">
-        <div className="secret-cine-letterbox secret-cine-letterbox-top" />
-        <div className="secret-cine-letterbox secret-cine-letterbox-bot" />
-        <div className="secret-cine-vignette" />
-        <div className="secret-cine-stage">
-          <div className="secret-cine-world">
-            {/* Beyond the door: 無盡黑暗深海 — nested abyss apertures */}
-            <div className="secret-cine-abyss">
-              <div className="secret-cine-abyss-layer" data-depth="0" />
-              <div className="secret-cine-abyss-layer" data-depth="1" />
-              <div className="secret-cine-abyss-layer" data-depth="2" />
-              <div className="secret-cine-abyss-nest" aria-hidden="true">
-                <span className="secret-cine-abyss-ring" data-ring="0" />
-                <span className="secret-cine-abyss-ring" data-ring="1" />
-                <span className="secret-cine-abyss-ring" data-ring="2" />
-              </div>
-              <span className="secret-cine-next-mark">
-                {nextScene?.mark ?? "·"}
-              </span>
-            </div>
-            {/* Heavy wood leaf — slow RE1 swing */}
-            <div className="secret-cine-door">
-              <div className="secret-cine-door-face">
-                <span className="secret-cine-handle">
-                  <span className="secret-cine-plate" />
-                  <span className="secret-cine-lever" />
-                </span>
-              </div>
-            </div>
-            {/* Handle close-up during turn */}
-            <div className="secret-cine-handle-hero" />
-            {/* Full black beat between open and abyss */}
-            <div className="secret-cine-black" />
-          </div>
-        </div>
-      </div>
-
-      <article
-        ref={contentRef}
-        className="secret-content"
-        aria-labelledby={headingId}
-      >
-        <header className="secret-content-head">
-          <p className="secret-folio">{scene.mark}</p>
-          <h1 id={headingId} className="secret-title" tabIndex={-1}>
-            {pickText(locale, scene.title.zh, scene.title.en)}
-          </h1>
-        </header>
-
-        <div className="secret-stack">
-          {scene.blocks.map((block, i) => {
-            const key = `${scene.id}-${i}`;
-            if (block.kind === "prose") {
-              const primary = locale === "zh" ? block.zh : block.en;
-              const facing = locale === "zh" ? block.en : block.zh;
-              return (
-                <section key={key} className="secret-block secret-prose">
-                  {block.locked ? (
-                    <p className="secret-locked-tag">
-                      {locale === "zh" ? "原文（鎖定）" : "Source (locked)"}
-                    </p>
-                  ) : null}
-                  {primary.split("\n").map((para, pi) => (
-                    <p key={pi}>{para}</p>
-                  ))}
-                  {scene.id === "xu" ? (
-                    <div className="secret-facing" lang={locale === "zh" ? "en" : "zh"}>
-                      {facing.split("\n").map((para, pi) => (
-                        <p key={pi}>{para}</p>
-                      ))}
-                    </div>
-                  ) : null}
-                </section>
-              );
-            }
-            if (block.kind === "label") {
-              return (
-                <p key={key} className="secret-block secret-draft-label">
-                  {pickText(locale, block.zh, block.en)}
-                </p>
-              );
-            }
-            if (block.kind === "note") {
-              return (
-                <p key={key} className="secret-block secret-note">
-                  {pickText(locale, block.zh, block.en)}
-                </p>
-              );
-            }
-            // stage
-            const done = Boolean(doneStages[key]);
-            return (
-              <section key={key} className="secret-block secret-stage">
-                <p className="secret-stage-line">
-                  {pickText(locale, block.zh, block.en)}
-                </p>
-                {!done ? (
-                  <button
-                    type="button"
-                    className="secret-stage-btn"
-                    disabled={pending}
-                    onClick={() => completeStage(block, key)}
-                  >
-                    {locale === "zh"
-                      ? "完成這一幕的舞台指示"
-                      : "Carry out this stage direction"}
-                  </button>
-                ) : (
-                  <div className="secret-marginalia">
-                    <p className="secret-marginalia-kicker">
-                      {locale === "zh" ? "道具已就位 · 旁白" : "Prop in place · Narration"}
-                    </p>
-                    <p className="secret-marginalia-body">
-                      {narration[key] ??
-                        (locale === "zh" ? "……" : "…")}
-                    </p>
-                    <label className="secret-proof">
-                      <span>
-                        {locale === "zh" ? "可選實證（本機預覽，不上傳帳號）" : "Optional proof (local preview only)"}
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
-                          // Local object URL only — never hits public Blob/account.
-                          const url = URL.createObjectURL(file);
-                          const img = e.currentTarget
-                            .closest(".secret-marginalia")
-                            ?.querySelector<HTMLImageElement>(".secret-proof-img");
-                          if (img) {
-                            img.src = url;
-                            img.hidden = false;
-                          }
-                        }}
-                      />
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img className="secret-proof-img" alt="" hidden />
-                    </label>
-                  </div>
-                )}
-              </section>
-            );
-          })}
-        </div>
-      </article>
-    </div>
-  );
-}
-
-function sceneIndexPassed(current: SceneId, candidate: SceneId): boolean {
-  return SCENE_ORDER.indexOf(candidate) < SCENE_ORDER.indexOf(current);
-}
+            {/* Nested apertures: next world already inside (Zoomquilt DNA) */}
+            <span className="secret-door-frame secret-zq-frame" data-depth="0">
+              <span className="secret-door-panel">
+                <span className="secret-door-knob" />
+                <span className="secret-zq-aperture" aria-hidden="true">
+                  <span className="secret-zq-frame" data-depth="1">
+                    <span className="secret-door-panel secret-zq-inner-panel">
+                      <span className="secret-door-knob secret-zq-knob-sm" />
+                      <span className="secret-zq-aperture">
+                        <span
+                          className={`secret-zq-frame secret-zq-next secret-atm-${nextScene?.atmosphere ?? scene.atmosphere}`}
+                          data-depth="2"
+                        >
+                          <span className="secret-zq-next-glow" />
+                          <span className="secret-zq-next-mark">
+                            {nextScene?.mark ?? "·"}
+                          </span>
+                        </span>
+                      </span
