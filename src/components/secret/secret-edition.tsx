@@ -206,8 +206,8 @@ export function SecretEdition({ locale }: Props) {
                   : "End of the current descent"
             }
           >
-            {/* Idle threshold: dark wood + brass lever (Gemini chiaroscuro) */}
-            <span className="secret-door-shell">
+            {/* Idle threshold: pixel Mineral Brutalism door + brass lever */}
+            <span className="secret-door-shell secret-pixel">
               <span className="secret-door-leaf">
                 <span className="secret-door-wood" />
                 <span className="secret-door-handle" aria-hidden="true">
@@ -231,7 +231,7 @@ export function SecretEdition({ locale }: Props) {
       </section>
 
       {/*
-        RE1-style cinematic door (not Gemini’s player):
+        RE1-style cinematic door (pixel sprites, not photo stills):
         turn → heavy open → black → endless dark deep ocean zoom → land
       */}
       <div className="secret-cine" aria-hidden="true">

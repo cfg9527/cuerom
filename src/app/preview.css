@@ -245,6 +245,21 @@
   outline-offset: 6px;
 }
 
+
+/* ── Pixel door art (nearest-neighbor / RE tank-era) ── */
+.secret-pixel,
+.secret-door-wood,
+.secret-cine-door-face,
+.secret-cine-handle-hero,
+.secret-door-plate,
+.secret-cine-plate,
+.secret-door-lever,
+.secret-cine-lever {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
 .secret-door-shell {
   position: relative;
   display: block;
@@ -252,11 +267,16 @@
   height: 88%;
   margin: 0 auto;
   perspective: 900px;
-  background: var(--ink-obsidian);
+  background:
+    url("/secret-door/frame-pixel.png") center / 16px 16px repeat,
+    var(--ink-obsidian);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--ink-brass) 22%, transparent),
-    0 18px 40px rgba(0, 0, 0, 0.45);
+    0 0 0 2px var(--ink-basalt),
+    0 0 0 3px color-mix(in srgb, var(--ink-brass) 35%, transparent),
+    0 18px 40px rgba(0, 0, 0, 0.55);
   overflow: hidden;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 .secret-door-leaf {
@@ -270,12 +290,12 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(115deg, color-mix(in srgb, var(--ink-brass) 16%, transparent) 0%, transparent 42%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.4), transparent 40%, rgba(0, 0, 0, 0.62)),
-    url("/secret-door/idle.jpg") center / cover no-repeat,
+    url("/secret-door/door-pixel-6x.png") center / 100% 100% no-repeat,
     var(--ink-basalt);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink-bone) 8%, transparent);
-  filter: saturate(0.55) brightness(0.72) contrast(1.05);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink-bone) 10%, transparent);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: none;
 }
 
 .secret-door-handle {
@@ -290,40 +310,34 @@
 .secret-door-plate {
   position: absolute;
   inset: 0;
-  border-radius: 0.12rem;
+  border-radius: 0;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--ink-brass) 88%, var(--ink-bone)) 0%, var(--ink-brass) 45%, color-mix(in srgb, var(--ink-brass) 55%, var(--ink-obsidian)) 100%);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 color-mix(in srgb, var(--ink-bone) 22%, transparent);
+    url("/secret-door/lever-pixel-6x.png") center / contain no-repeat,
+    var(--ink-brass);
+  box-shadow: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 .secret-door-plate::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0.28rem;
-  width: 0.28rem;
-  height: 0.28rem;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  border: 1px solid rgba(20, 14, 8, 0.55);
-  background: var(--ink-obsidian);
+  content: none;
 }
 
 .secret-door-lever {
   position: absolute;
-  top: 0.42rem;
-  left: 50%;
-  width: 1.35rem;
-  height: 0.28rem;
-  margin-left: -0.18rem;
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--ink-brass) 80%, var(--ink-bone)) 0%, var(--ink-brass) 55%, color-mix(in srgb, var(--ink-brass) 60%, var(--ink-obsidian)) 100%);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  transform-origin: 0.18rem 50%;
+  top: 0.55rem;
+  left: 52%;
+  width: 1.15rem;
+  height: 0.22rem;
+  margin-left: -0.1rem;
+  border-radius: 0;
+  background: var(--ink-brass);
+  box-shadow:
+    1px 0 0 color-mix(in srgb, var(--ink-bone) 35%, transparent),
+    0 1px 0 var(--ink-obsidian);
+  transform-origin: 0.12rem 50%;
   transition: transform 0.45s cubic-bezier(0.33, 0.1, 0.2, 1);
+  image-rendering: pixelated;
 }
 
 .secret-door-draft {
@@ -337,12 +351,13 @@
     repeating-linear-gradient(
       90deg,
       transparent,
-      transparent 6px,
-      rgba(28, 24, 20, 0.18) 6px,
-      rgba(28, 24, 20, 0.18) 7px
+      transparent 4px,
+      color-mix(in srgb, var(--ink-bone) 12%, transparent) 4px,
+      color-mix(in srgb, var(--ink-bone) 12%, transparent) 5px
     );
-  mask-image: linear-gradient(180deg, transparent, #000 40%, transparent);
-  animation: secret-draft 3.6s ease-in-out infinite;
+  image-rendering: pixelated;
+  opacity: 0.45;
+  animation: secret-draft 3.6s steps(4, end) infinite;
 }
 
 .secret-door-hint {
@@ -416,7 +431,8 @@
   transform-origin: 50% 48%;
   will-change: transform;
   background: var(--ink-obsidian);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink-brass) 10%, transparent);
+  box-shadow: 0 0 0 2px var(--ink-basalt), 0 0 0 3px color-mix(in srgb, var(--ink-brass) 28%, transparent);
+  image-rendering: pixelated;
 }
 
 .secret-cine-world {
@@ -454,9 +470,12 @@
 
 .secret-cine-abyss-layer[data-depth="1"] {
   background:
+    url("/secret-door/abyss-pixel-4x.png") center / 40% no-repeat,
     url("/secret-door/abyss-deep.jpg") center / cover no-repeat;
-  opacity: 0.45;
+  opacity: 0.55;
   mix-blend-mode: soft-light;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 .secret-cine-abyss-layer[data-depth="2"] {
@@ -522,11 +541,12 @@
   inset: 0;
   transform-origin: left center;
   background:
-    linear-gradient(105deg, color-mix(in srgb, var(--ink-brass) 12%, transparent), transparent 38%),
-    url("/secret-door/idle.jpg") center / cover no-repeat,
+    url("/secret-door/door-pixel-6x.png") center / 100% 100% no-repeat,
     var(--ink-basalt);
-  box-shadow: inset -8px 0 24px rgba(0, 0, 0, 0.6);
-  filter: saturate(0.5) brightness(0.7) contrast(1.06);
+  box-shadow: inset -4px 0 0 var(--ink-obsidian);
+  filter: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
   transition: transform 1.7s cubic-bezier(0.12, 0.05, 0.15, 1), opacity 0.8s ease;
 }
 
@@ -541,23 +561,30 @@
 .secret-cine-plate {
   position: absolute;
   inset: 0;
-  border-radius: 0.15rem;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--ink-brass) 85%, var(--ink-bone)), color-mix(in srgb, var(--ink-brass) 55%, var(--ink-obsidian)));
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.55);
+  border-radius: 0;
+  background:
+    url("/secret-door/lever-pixel-6x.png") center / contain no-repeat,
+    var(--ink-brass);
+  box-shadow: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 .secret-cine-lever {
   position: absolute;
-  top: 0.55rem;
-  left: 50%;
-  width: 2.1rem;
-  height: 0.38rem;
-  margin-left: -0.22rem;
-  border-radius: 999px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--ink-brass) 75%, var(--ink-bone)), var(--ink-brass));
-  transform-origin: 0.22rem 50%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  top: 0.7rem;
+  left: 52%;
+  width: 1.85rem;
+  height: 0.32rem;
+  margin-left: -0.14rem;
+  border-radius: 0;
+  background: var(--ink-brass);
+  transform-origin: 0.14rem 50%;
+  box-shadow:
+    1px 0 0 color-mix(in srgb, var(--ink-bone) 40%, transparent),
+    0 1px 0 var(--ink-obsidian);
   transition: transform 1.1s cubic-bezier(0.2, 0.05, 0.2, 1);
+  image-rendering: pixelated;
 }
 
 .secret-cine-handle-hero {
@@ -565,10 +592,13 @@
   inset: 0;
   z-index: 4;
   background:
-    radial-gradient(circle at 55% 48%, transparent 22%, rgba(0, 0, 0, 0.62) 72%),
-    url("/secret-door/handle.jpg") center / cover no-repeat;
+    radial-gradient(circle at 55% 48%, transparent 18%, color-mix(in srgb, var(--ink-obsidian) 88%, transparent) 78%),
+    url("/secret-door/handle-pixel-6x.png") center / min(52%, 18rem) no-repeat,
+    var(--ink-obsidian);
   opacity: 0;
-  transform: scale(1.04);
+  transform: scale(1);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 .secret-cine-black {
@@ -591,7 +621,7 @@
 .door-turn .secret-door-lever,
 .door-turn .secret-cine-lever {
   transform: rotate(78deg);
-  transition: transform 1.25s cubic-bezier(0.2, 0.05, 0.2, 1);
+  transition: transform 1.25s steps(8, end);
 }
 
 .door-turn .secret-cine {
